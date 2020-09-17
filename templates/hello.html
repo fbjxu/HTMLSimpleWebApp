@@ -8,18 +8,28 @@
 </head>
 
 <body>
-    <p>Hello World</p>
+    <p>Stock Trader</p>
     <form action="#" method="post">
         <p>Stock:</p>
-        <p><input type="text" name="nm"></p>
-        <p><input type="submit" , value="submit"> </p>
-        <div class="input">
-            <input id="symbol" type="text" class="form-control" placeholder="Enter Stock ETF or Mutual Fund Symbol">
-            <div class="input-button">
-                <button class="btn" type="button" onclick="site.SubmitForm();">Search</button>
-            </div>
-        </div>
+        <p><input type="text" name="nm" placeholder="enter a stock"></p>
+        <p><input type="submit", value="submit"></p>
     </form>
+
+<!-- company outlook -->
+    <p>outlook</p>
+    <ul>
+        {% for key, value in outlook.items() %}
+            <li>Key: {{ key }} Value: {{ value }}</li>
+        {% endfor %}
+    </ul>
+<!-- stock summary -->
+    <p>summary</p>
+    <ul>
+        {% for key, value in summary.items() %}
+            <li>Key: {{ key }} Value: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
 </body>
 
 </html>
