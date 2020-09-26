@@ -9,10 +9,11 @@
 
 <body>
     <p>Stock Trader</p>
-    <form action="#" method="post">
+    <form method="post" name="stockSymbol">
         <p>Stock:</p>
-        <p><input type="text" name="nm" placeholder="enter a stock"></p>
+        <p><input type="text" name="stock" value="{{ stock }}" required></p>
         <p><input type="submit", value="submit"></p>
+        <p><input type="reset", value="clear"></p>
     </form>
 
 <!-- company outlook -->
@@ -30,6 +31,16 @@
         {% endfor %}
     </ul>
 
+<!-- chart data -->
+    <p>chart data</p>
+    <ul>
+        {% for record in chartData %}
+            {% for key, value in record.items() %}
+                <li>Key: {{ key }} Value: {{ value }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+<script src="{{ url_for('static', filename='scripts/stock.js') }}"></script>
 </body>
 
 </html>

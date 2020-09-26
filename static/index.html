@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+</head>
+<body>
+    <p>Stock Trader</p>
+    <form method ="post" name="stock" onsubmit="myFunction(); return false;">
+        <p>Stock:</p>
+        <p></p><input type="text" id = "input" required></p>
+        <p></p><input type="submit" value="submit" ></p>
+        <p></p><input type="reset" value="clear"></p>
+    </form>
+    <div id="outlookTable"></div>
+    <div id="summaryTable"></div>
+</body>
+
+<script type="text/javascript">
+    function myFunction() {
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() 
+        {
+            if(xhttp.readyState==4 && xhttp.status ==200) {
+                var stock_ticker = xhttp.responseText; 
+                document.getElementById("input").value = stock_ticker;
+                request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
+                request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
+            }
+        }
+        xhttp.open("GET", "/api/stockName?symbol="+document.getElementById("input").value);
+        xhttp.send();
+    };
+
+    function request_info(stock_ticker, request_type, loadFunc){ //pass loadFunc as var
+        let stock_request = new XMLHttpRequest(); //function variable
+        stock_request.onreadystatechange = function()
+        {
+            if(stock_request.readyState==4 && stock_request.status ==200) {
+                var response_obj = JSON.parse(stock_request.responseText); // convert to json
+                loadFunc(response_obj);
+            }
+        }
+        stock_request.open("GET", "/api/"+request_type+"?symbol="+stock_ticker);
+        stock_request.send();
+    }
+
+    function loadOutlook(response) 
+    {
+        html = ["<table>", "<tr>", "<td>"];
+        html.push
+        //company name
+        html.push("Company Name");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.name);
+        html.push("</td>");
+        html.push("</tr>");
+        //ticker symbol
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Stock Ticker Symbol");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.ticker);
+        html.push("</td>");
+        html.push("</tr>");
+
+        //stock exchange code
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Stock Exchange Code");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.exchangeCode);
+        html.push("</td>");
+        html.push("</tr>");
+        //company start date
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Company Start Date");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.startDate);
+        html.push("</td>");
+        html.push("</tr>");
+
+        //description
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Description");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.description);
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("</table>");
+        document.getElementById("outlookTable").innerHTML = html.join("");
+    }
+
+    function loadSummary(response) 
+    {
+        response = response[0];
+        html = ["<table>", "<tr>", "<td>"];
+        html.push
+        //Stock Ticker Symbol
+        html.push("Stock Ticker Symbol");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.ticker);
+        html.push("</td>");
+        html.push("</tr>");
+        //Trading Day
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Trading Day");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.timestamp.substring(0,10));
+        html.push("</td>");
+        html.push("</tr>");
+        //Previous Closing Price
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Previous Closing Price");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(parseFloat(response.prevClose));
+        html.push("</td>");
+        html.push("</tr>");
+        //Opening Price
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Opening Price");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(parseFloat(response.open));
+        html.push("</td>");
+        html.push("</tr>");
+
+        //High Price
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("High Price");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(parseFloat(response.high));
+        html.push("</td>");
+        html.push("</tr>");
+
+        //Low Price
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Low Price");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(parseFloat(response.low));
+        html.push("</td>");
+        html.push("</tr>");
+
+        //Last Price
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Last Price");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(parseFloat(response.last));
+        html.push("</td>");
+        html.push("</tr>");
+        
+        //Change
+        var change = parseFloat(response.last) - parseFloat(response.prevClose);
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Change");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(change.toFixed(2));
+        html.push("</td>");
+        html.push("</tr>");
+        
+
+        //Change Percent
+        var change_percent = (change/parseFloat(response.prevClose))*100;
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Change Percent");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(change_percent.toFixed(2));
+        html.push("</td>");
+        html.push("</tr>");
+
+        //Number of Shares Traded
+        html.push("<tr>")
+        html.push("<td>");
+        html.push("Number of Shares Traded");
+        html.push("</td>");
+        html.push("<td>");
+        html.push(response.volume);
+        html.push("</td>");
+        html.push("</tr>");
+
+        html.push("</table>");
+        document.getElementById("summaryTable").innerHTML = html.join("");
+    }
+</script>
+</html>
