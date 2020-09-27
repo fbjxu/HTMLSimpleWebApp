@@ -14,18 +14,26 @@
     </form>
     <div id="outlookTable"></div>
     <div id="summaryTable"></div>
+    <div id="chart-graph"></div>
+    <p id="chartData"></p>
+
 </body>
 
 <script type="text/javascript">
+    stock_ticker = ""; 
+    today_date="";
     function myFunction() {
         xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() 
         {
             if(xhttp.readyState==4 && xhttp.status ==200) {
-                var stock_ticker = xhttp.responseText; 
+                var stock_tiker_time = JSON.parse(xhttp.response);
+                stock_ticker = stock_tiker_time[0]; 
+                today_date = stock_tiker_time[1]
                 document.getElementById("input").value = stock_ticker;
                 request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
                 request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
+                request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
             }
         }
         xhttp.open("GET", "/api/stockName?symbol="+document.getElementById("input").value);
@@ -204,5 +212,129 @@
         html.push("</table>");
         document.getElementById("summaryTable").innerHTML = html.join("");
     }
+
+    function loadChart(response) 
+    {
+        var price_series = [];
+        var volume_series = [];
+
+        var i = 0;
+        for (i = 0; i<response.length; i++) //iterate through daily data
+        {
+            var close_price = response[i].close;
+            var volume = response[i].volume;
+            var date_string = response[i].date.substring(0,10);
+            var date = Date.parse(date_string);
+            if (date_string!=null) 
+            {
+                price_series.push([date, close_price]);
+                volume_series.push([date, volume]);
+            }
+        };
+
+        // Create the chart
+        Highcharts.stockChart('chart-graph', {
+
+            rangeSelector: {
+                buttons: [{
+                    type: 'day',
+                    count: 7,
+                    text: '7d'
+                }, {
+                    type: 'day',
+                    count: 15,
+                    text: '15d'
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                }, {
+                    type: 'month',
+                    count: 3,
+                    text: '3m'
+                }, {
+                    type: 'month',
+                    count: 6,
+                    text: '6m'
+                }],
+                selected: 5,
+                inputEnabled: false
+            },
+
+            title: {
+                text: 'Stock Price ' + stock_ticker + " " + today_date,
+            },
+
+            subtitle: {
+                useHTML: true,
+                text: '<a href="https://api.tiingo.com/"><u>Source: Tiingo</u></a>',
+            },
+
+            yAxis: [
+                {
+                    title: {
+                        text: 'Stock Price'
+                    }
+                },
+                {
+                    title: {
+                        text: 'Volume'
+                    },
+                    opposite:true
+                }
+            ],
+
+            series: [{
+                name: 'Stock Price',
+                data: price_series,
+                type: 'area',
+                yAxis: 0,
+                threshold: null,
+                tooltip: {
+                    valueDecimals: 2
+                },
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                }
+            }, {
+                name: 'Volume',
+                data: volume_series,
+                type: 'column',
+                yAxis: 1,
+                threshold: null,
+                tooltip: {
+                    valueDecimals: 0
+                },
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                }
+            }]
+        });
+        // document.getElementById("chartData").innerHTML = volume_series;
+    }
 </script>
+<!-- high chart js -->
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+
 </html>
