@@ -3,19 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World</title>
+    <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-    <p>Stock Trader</p>
-    <form method ="post" name="stock" onsubmit="myFunction(); return false;">
-        <p>Stock:</p>
-        <p></p><input type="text" id = "input" required></p>
-        <p></p><input type="submit" value="submit" ></p>
-        <p></p><input type="reset" value="clear"></p>
-    </form>
+    <div class="search-box">
+        <p class="title">Stock Trader</p>
+        <div class = "search-box-form">
+            <form id="search-form" method ="post" name="stock" onsubmit="myFunction(); return false;">
+                <p class="regular-paragraph">Enter Stock Ticker Symbol <span id="font-color">*</span> <input type="text" id = "input-stock" size="25" required ></p>
+                <p><input type="submit" value="Search" id="submit"> <input type="reset" value="Clear" id="reset"></p>
+            </form>
+            <!-- <div id="outlookTable" class = "tabcontent"></div>
+            <div id="summaryTable" class = "tabcontent"></div>
+            <div id="chart-graph" class = "tabcontent"></div> -->
+        </div>
+    </div>
+    <hr id="hr-line">
+
+    <!-- <div class="tabs">
+        <button class="tablinks" onclick="openTab(event, 'outlookTable')">Company Outlook</button>
+        <button class="tablinks" onclick="openTab(event, 'summaryTable')">Stock Summary</button>
+        <button class="tablinks" onclick="openTab(event, 'chart-graph')">Charts</button>
+        <button class="tablinks" onclick="openTab(event, 'news')">Latest News</button>
+    </div> -->
+    
     <div id="outlookTable"></div>
     <div id="summaryTable"></div>
     <div id="chart-graph"></div>
-    <p id="chartData"></p>
+    <div id="news"></div>
 
 </body>
 
@@ -31,9 +46,9 @@
                 stock_ticker = stock_tiker_time[0]; 
                 today_date = stock_tiker_time[1]
                 document.getElementById("input").value = stock_ticker;
-                request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
-                request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
-                request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
+                // request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
+                // request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
+                // request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
             }
         }
         xhttp.open("GET", "/api/stockName?symbol="+document.getElementById("input").value);
@@ -273,14 +288,15 @@
             yAxis: [
                 {
                     title: {
-                        text: 'Stock Price'
-                    }
+                        text: 'Volume'
+                    },
+                    opposite:true,
                 },
                 {
                     title: {
-                        text: 'Volume'
+                        text: 'Stock Price'
                     },
-                    opposite:true
+                    opposite:false,
                 }
             ],
 
@@ -288,7 +304,7 @@
                 name: 'Stock Price',
                 data: price_series,
                 type: 'area',
-                yAxis: 0,
+                yAxis: 1,
                 threshold: null,
                 tooltip: {
                     valueDecimals: 2
@@ -309,32 +325,37 @@
                 name: 'Volume',
                 data: volume_series,
                 type: 'column',
-                yAxis: 1,
+                yAxis: 0,
                 threshold: null,
                 tooltip: {
                     valueDecimals: 0
                 },
-                fillColor: {
-                    linearGradient: {
-                        x1: 0,
-                        y1: 0,
-                        x2: 0,
-                        y2: 1
-                    },
-                    stops: [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                }
-            }]
+            }],
         });
-        // document.getElementById("chartData").innerHTML = volume_series;
     }
 </script>
+
+
 <!-- high chart js -->
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/stock/modules/data.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
 
+
+<!-- <script>
+function openTab(event, sectionName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(sectionName).style.display = "block";
+    event.currentTarget.className += " active";
+}
+</script> -->
 </html>

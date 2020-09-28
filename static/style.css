@@ -1,0 +1,122 @@
+body {
+    font-family: sans-serif;
+    background-color:#6060a9;
+}
+
+#hr-line {
+    display:block;
+    width: 1000px;
+    margin-top: 30px;
+    margin-left: 250px;
+    border-top: 2px solid #e8e8e8;
+    position: absolute;
+
+}
+.search-box {
+    position: static;
+    margin-top: 50px;
+    margin-left: 250px;
+    height: 250px;
+    width: 1000px;
+    background-color:#e8e8e8;
+    
+}
+
+.title {
+    position: absolute;
+    margin-top: 45px;
+    margin-left: 430px;
+    font-size: 30px;
+    text-align: left;
+    height: 30px;
+    display: block;
+    font-family: sans-serif;
+    white-space:nowrap;
+  }
+
+.regular-paragraph {
+    font-family: sans-serif;
+}
+
+.search-box form {
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 290px;
+    white-space:nowrap;
+}
+
+input[type=text] {
+    padding: 7px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 6px;
+    white-space:nowrap;
+  }
+
+
+#submit {
+    position: absolute;
+    margin-left: 55px;
+    margin-top: 20px;
+    border: none;
+    height: 40px;
+    width:110px;
+    background-color: #f8f8f8;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+#reset {
+    position: absolute;
+    margin-left: 210px;
+    margin-top: 20px;
+    border: none;
+    height: 40px;
+    width:110px;
+    background-color: #f8f8f8;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+#font-color {
+    color: red;
+}
+
+.tabs {
+    margin-top: 60px;
+    margin-left: 250px;
+    width: 1000px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+.tabs button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  
+
+  .tabs button:hover {
+    background-color: #ddd;
+  }
+  
+ 
+  .tabs button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
