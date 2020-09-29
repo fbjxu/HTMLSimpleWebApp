@@ -181,6 +181,12 @@ function loadSummary(response)
     html.push("</td>");
     html.push("<td>");
     html.push(change.toFixed(2));
+    if (change >0) {
+        html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
+    }
+    if (change <0) {
+        html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+    }
     html.push("</td>");
     html.push("</tr>");
     
@@ -192,7 +198,13 @@ function loadSummary(response)
     html.push("Change Percent");
     html.push("</td>");
     html.push("<td>");
-    html.push(change_percent.toFixed(2));
+    html.push(parseFloat(change_percent.toFixed(2))+"%");
+    if (change_percent >0) {
+        html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
+    }
+    if (change_percent <0) {
+        html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+    }
     html.push("</td>");
     html.push("</tr>");
 
@@ -220,7 +232,7 @@ function loadNews(response) {
         var origLink = response[i].url;
         var s = `    <div class = "news-section">
                         <div class="news-pic">
-                            <img src="` + imageUrl +`" , alt="Decor">
+                            <img src="` + imageUrl +`" , alt="photo">
                         </div>
                         <div class="news-text">
                             <p id ="news-content"><b>`+ title +`</b> <br> 
@@ -228,11 +240,6 @@ function loadNews(response) {
                         </div>
                     </div>`
         html.push(s);
-        // html.push("<div class = \"news-section\"><div class=\"news-pic\">");
-        // html.push("<img src=\"");
-        // html.push(response[i].urlToImage);
-        // html.push("\", alt=\"news pic\"></div>");
-        // html.push("<div class=\"news-text\"><p id=\"news-content\"><b>");
     }
     document.getElementById("news").innerHTML = html.join(""); 
 }
