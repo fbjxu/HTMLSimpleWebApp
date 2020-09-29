@@ -10,31 +10,24 @@
         <p class="title">Stock Trader</p>
         <div class = "search-box-form">
             <form id="search-form" method ="post" name="stock" onsubmit="myFunction(); return false;">
-                <p class="regular-paragraph">Enter Stock Ticker Symbol <span id="font-color">*</span> <input type="text" id = "input-stock" size="25" required ></p>
+                <p class="regular-paragraph">Enter Stock Ticker Symbol <span id="font-color">*</span> <input type="text" id = "input" size="25" required ></p>
                 <p><input type="submit" value="Search" id="submit"> <input type="reset" value="Clear" id="reset"></p>
             </form>
-            <!-- <div id="outlookTable" class = "tabcontent"></div>
-            <div id="summaryTable" class = "tabcontent"></div>
-            <div id="chart-graph" class = "tabcontent"></div> -->
         </div>
     </div>
     <hr id="hr-line">
-
-    <!-- <div class="tabs">
-        <button class="tablinks" onclick="openTab(event, 'outlookTable')">Company Outlook</button>
-        <button class="tablinks" onclick="openTab(event, 'summaryTable')">Stock Summary</button>
-        <button class="tablinks" onclick="openTab(event, 'chart-graph')">Charts</button>
-        <button class="tablinks" onclick="openTab(event, 'news')">Latest News</button>
-    </div> -->
+    <div id = "error"></div>
+    <div class="tabs" id = "tab-section">
+    </div>
     
-    <div id="outlookTable"></div>
-    <div id="summaryTable"></div>
-    <div id="chart-graph"></div>
-    <div id="news"></div>
+   
+    <div id="outlookTable" class = "tabcontent"></div>
+    <div id="summaryTable" class = "tabcontent"></div>
+    <div id="chart-graph" class = "tabcontent"></div>
+    <div id="news" class = "tabcontent"></div>
+    
 
-</body>
-
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     stock_ticker = ""; 
     today_date="";
     function myFunction() {
@@ -45,10 +38,29 @@
                 var stock_tiker_time = JSON.parse(xhttp.response);
                 stock_ticker = stock_tiker_time[0]; 
                 today_date = stock_tiker_time[1]
+                var valid_input = stock_tiker_time[2];
                 document.getElementById("input").value = stock_ticker;
-                // request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
-                // request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
-                // request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
+                if (valid_input == "no") {
+                    document.getElementById("error").innerHTML = "<p>Error: No record has been found, please enter a valid symbol</p>"; 
+                    document.getElementById("tab-section").innerHTML="";
+                    document.getElementById("outlookTable").innerHTML="";
+                    document.getElementById("summaryTable").innerHTML="";
+                    document.getElementById("chart-graph").innerHTML="";
+                    document.getElementById("news").innerHTML="";
+
+                }
+                else {
+                    document.getElementById("error").innerHTML="";
+                    document.getElementById("outlookTable").style.display = "block"
+                    document.getElementById("summaryTable").style.display = "none"
+                    document.getElementById("chart-graph").style.display = "none"
+                    document.getElementById("news").style.display = "none"
+                    generateTab();
+                    request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
+                    request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
+                    request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
+                    request_info(stock_ticker, request_type="news", loadFunc=loadNews);
+                }
             }
         }
         xhttp.open("GET", "/api/stockName?symbol="+document.getElementById("input").value);
@@ -70,12 +82,12 @@
 
     function loadOutlook(response) 
     {
-        html = ["<table>", "<tr>", "<td>"];
+        html = ["<table>", "<tr>", "<td class=\"firstwidth\">"];
         html.push
         //company name
         html.push("Company Name");
         html.push("</td>");
-        html.push("<td>");
+        html.push("<td class=\"secwidth\">");
         html.push(response.name);
         html.push("</td>");
         html.push("</tr>");
@@ -228,6 +240,33 @@
         document.getElementById("summaryTable").innerHTML = html.join("");
     }
 
+    function loadNews(response) {
+        var i;
+        var html = [""];
+        for (i=0; i<response.length && i<5; i++) { //get first 5 stories
+            var title = response[i].title;
+            var imageUrl = response[i].urlToImage;
+            var date = response[i].publishedAt.substring(0,10);
+            var origLink = response[i].url;
+            var s = `    <div class = "news-section">
+                            <div class="news-pic">
+                                <img src="` + imageUrl +`" , alt="Decor">
+                            </div>
+                            <div class="news-text">
+                                <p id ="news-content"><b>`+ title +`</b> <br> 
+                                `+date+` <br><a href="`+origLink+`">See Original Post</a></p>
+                            </div>
+                        </div>`
+            html.push(s);
+            // html.push("<div class = \"news-section\"><div class=\"news-pic\">");
+            // html.push("<img src=\"");
+            // html.push(response[i].urlToImage);
+            // html.push("\", alt=\"news pic\"></div>");
+            // html.push("<div class=\"news-text\"><p id=\"news-content\"><b>");
+        }
+        document.getElementById("news").innerHTML = html.join(""); 
+    }
+
     function loadChart(response) 
     {
         var price_series = [];
@@ -246,7 +285,7 @@
                 volume_series.push([date, volume]);
             }
         };
-
+        var upperStock = stock_ticker.toUpperCase();
         // Create the chart
         Highcharts.stockChart('chart-graph', {
 
@@ -277,7 +316,7 @@
             },
 
             title: {
-                text: 'Stock Price ' + stock_ticker + " " + today_date,
+                text: 'Stock Price ' + upperStock + " " + today_date,
             },
 
             subtitle: {
@@ -333,7 +372,17 @@
             }],
         });
     }
-</script>
+    
+    
+
+    function generateTab() {
+        document.getElementById("tab-section").innerHTML = `
+        <button class="tablinks active" onclick="openTab(event, 'outlookTable')">Company Outlook</button>
+            <button class="tablinks" onclick="openTab(event, 'summaryTable')">Stock Summary</button>
+            <button class="tablinks" onclick="openTab(event, 'chart-graph')">Charts</button>
+            <button class="tablinks" onclick="openTab(event, 'news')">Latest News</button>`
+    }
+</script> -->
 
 
 <!-- high chart js -->
@@ -341,9 +390,10 @@
 <script src="https://code.highcharts.com/stock/modules/data.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
-
-
-<!-- <script>
+<!-- customized script -->
+<script type="text/javascript" src="/static/script.js"></script>
+<!-- 
+<script>
 function openTab(event, sectionName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -358,4 +408,5 @@ function openTab(event, sectionName) {
     event.currentTarget.className += " active";
 }
 </script> -->
+    </body>
 </html>

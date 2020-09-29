@@ -12,6 +12,8 @@ body {
     position: absolute;
 
 }
+
+/*big search*/
 .search-box {
     position: static;
     margin-top: 50px;
@@ -19,6 +21,7 @@ body {
     height: 250px;
     width: 1000px;
     background-color:#e8e8e8;
+    border-radius: 6px;
     
 }
 
@@ -82,16 +85,15 @@ input[type=text] {
     color: red;
 }
 
+ /* tab */
 .tabs {
     margin-top: 60px;
     margin-left: 250px;
     width: 1000px;
     overflow: hidden;
-    border: 1px solid #ccc;
     background-color: #f1f1f1;
   }
 
-  /* Style the buttons inside the tab */
 .tabs button {
     background-color: inherit;
     float: left;
@@ -104,19 +106,107 @@ input[type=text] {
   }
   
 
-  .tabs button:hover {
-    background-color: #ddd;
+.tabs button:hover {
+    background-color: #cccccc;
+}
+
+
+.tabs button.active {
+    background-color: #cccccc;
+}
+
+
+.tabcontent {
+    display: none;  
+}
+
+#outlookTable {
+    display: block
+}
+
+  /* table */
+table {
+      table-layout: fixed;
+      text-align: left;
+      margin-top: 40px;
+      margin-left: 250px;
+      width: 1000px;
+      overflow: hidden;
+      border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #dbd6d6;
+    border-collapse: collapse;
   }
-  
- 
-  .tabs button.active {
-    background-color: #ccc;
-  }
-  
-  /* Style the tab content */
-  .tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-  }
+
+table tr td:nth-child(1) {
+    width: 350px;
+    font-weight: bold;
+    background-color: #e8e6e6;
+}
+
+table tr td:nth-child(2) {
+    width: 650px;
+    background-color: #fbfbfb;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: clip;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
+/*high chart*/
+#chart-graph {
+    width: 1000px;
+    height: 400px;
+    margin-top: 40px;
+    margin-left: 250px;
+}
+
+/* error */
+#error {
+    margin-left: 470px;
+    margin-top: 80px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* news section */
+#news {
+    margin-top: 40px;
+}
+
+.news-section {
+    background-color: #f1f1f1;
+    height: 120px;
+    width: 1000px;
+    margin-left: 250px;
+    border-radius: 6px;
+}
+
+.news-pic {
+    float: left
+}
+
+.news-pic img {
+    display:in-block;
+    width: 100px;
+    height: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    object-fit: cover;
+}
+
+.news-text {
+    margin-left: 130px;
+    font-family: sans-serif;
+    line-height: normal;
+}
+
+#news-content {
+    padding-top:10px;
+}
