@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
+    <title>Stock Search</title>
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
     <div class="search-box">
-        <p class="title">Stock Trader</p>
+        <p class="title">Stock Search</p>
         <div class = "search-box-form">
             <form id="search-form" method ="post" name="stock" onsubmit="myFunction(); return false;">
                 <p class="regular-paragraph">Enter Stock Ticker Symbol <span id="font-color">*</span> <input type="text" id = "input" size="25" required ></p>
-                <p><input type="submit" value="Search" id="submit"> <input type="reset" value="Clear" id="reset"></p>
+                <p><input type="submit" value="Search" id="submit"> <input type="reset" value="Clear" id="reset" onclick="Clear()"></p>
             </form>
         </div>
     </div>

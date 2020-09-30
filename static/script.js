@@ -1,5 +1,15 @@
 stock_ticker = ""; 
 today_date="";
+
+function Clear() {
+    document.getElementById("error").innerHTML="";
+    document.getElementById("tab-section").innerHTML="";
+    document.getElementById("outlookTable").innerHTML="";
+    document.getElementById("summaryTable").innerHTML="";
+    document.getElementById("chart-graph").innerHTML="";
+    document.getElementById("news").innerHTML="";
+}
+
 function myFunction() {
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() 
@@ -11,7 +21,7 @@ function myFunction() {
             var valid_input = stock_tiker_time[2];
             document.getElementById("input").value = stock_ticker;
             if (valid_input == "no") {
-                document.getElementById("error").innerHTML = "<p>Error: No record has been found, please enter a valid symbol</p>"; 
+                document.getElementById("error").innerHTML = "<p>Error: No record has been found, please enter a valid symbol.</p>"; 
                 document.getElementById("tab-section").innerHTML="";
                 document.getElementById("outlookTable").innerHTML="";
                 document.getElementById("summaryTable").innerHTML="";
@@ -26,6 +36,10 @@ function myFunction() {
                 document.getElementById("chart-graph").style.display = "none"
                 document.getElementById("news").style.display = "none"
                 generateTab();
+                document.getElementById("outlookTable").innerHTML="";
+                document.getElementById("summaryTable").innerHTML="";
+                document.getElementById("chart-graph").innerHTML="";
+                document.getElementById("news").innerHTML="";
                 request_info(stock_ticker, request_type="outlook", loadFunc=loadOutlook);
                 request_info(stock_ticker, request_type="summary", loadFunc=loadSummary);
                 request_info(stock_ticker, request_type="chart", loadFunc=loadChart);
@@ -58,6 +72,7 @@ function loadOutlook(response)
     html.push("Company Name");
     html.push("</td>");
     html.push("<td class=\"secwidth\">");
+    html.push("&nbsp;");
     html.push(response.name);
     html.push("</td>");
     html.push("</tr>");
@@ -67,6 +82,7 @@ function loadOutlook(response)
     html.push("Stock Ticker Symbol");
     html.push("</td>");
     html.push("<td>");
+    html.push("&nbsp;");
     html.push(response.ticker);
     html.push("</td>");
     html.push("</tr>");
@@ -77,6 +93,7 @@ function loadOutlook(response)
     html.push("Stock Exchange Code");
     html.push("</td>");
     html.push("<td>");
+    html.push("&nbsp;");
     html.push(response.exchangeCode);
     html.push("</td>");
     html.push("</tr>");
@@ -86,6 +103,7 @@ function loadOutlook(response)
     html.push("Company Start Date");
     html.push("</td>");
     html.push("<td>");
+    html.push("&nbsp;");
     html.push(response.startDate);
     html.push("</td>");
     html.push("</tr>");
@@ -96,6 +114,7 @@ function loadOutlook(response)
     html.push("Description");
     html.push("</td>");
     html.push("<td>");
+    html.push("&nbsp;");
     html.push(response.description);
     html.push("</td>");
     html.push("</tr>");
@@ -112,7 +131,8 @@ function loadSummary(response)
     html.push("Stock Ticker Symbol");
     html.push("</td>");
     html.push("<td>");
-    html.push(response.ticker);
+    html.push("&nbsp;");
+    if(response.ticker != null) html.push(response.ticker);
     html.push("</td>");
     html.push("</tr>");
     //Trading Day
@@ -121,7 +141,8 @@ function loadSummary(response)
     html.push("Trading Day");
     html.push("</td>");
     html.push("<td>");
-    html.push(response.timestamp.substring(0,10));
+    html.push("&nbsp;");
+    if(response.timestamp != null) {html.push(response.timestamp.substring(0,10));}
     html.push("</td>");
     html.push("</tr>");
     //Previous Closing Price
@@ -130,7 +151,8 @@ function loadSummary(response)
     html.push("Previous Closing Price");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(response.prevClose));
+    html.push("&nbsp;");
+    if(response.prevClose != null) html.push(parseFloat(response.prevClose));
     html.push("</td>");
     html.push("</tr>");
     //Opening Price
@@ -139,7 +161,8 @@ function loadSummary(response)
     html.push("Opening Price");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(response.open));
+    html.push("&nbsp;");
+    if(response.open != null) html.push(parseFloat(response.open));
     html.push("</td>");
     html.push("</tr>");
 
@@ -149,7 +172,8 @@ function loadSummary(response)
     html.push("High Price");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(response.high));
+    html.push("&nbsp;");
+    if(response.high != null) html.push(parseFloat(response.high));
     html.push("</td>");
     html.push("</tr>");
 
@@ -159,7 +183,8 @@ function loadSummary(response)
     html.push("Low Price");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(response.low));
+    html.push("&nbsp;");
+    if(response.low != null) html.push(parseFloat(response.low));
     html.push("</td>");
     html.push("</tr>");
 
@@ -169,7 +194,8 @@ function loadSummary(response)
     html.push("Last Price");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(response.last));
+    html.push("&nbsp;");
+    if(response.last != null) html.push(parseFloat(response.last));
     html.push("</td>");
     html.push("</tr>");
     
@@ -180,12 +206,15 @@ function loadSummary(response)
     html.push("Change");
     html.push("</td>");
     html.push("<td>");
-    html.push(change.toFixed(2));
-    if (change >0) {
-        html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
-    }
-    if (change <0) {
-        html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+    html.push("&nbsp;");
+    if(response.last != null) {
+        html.push(change.toFixed(2));
+        if (change >0) {
+            html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
+        }
+        if (change <0) {
+            html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+        }
     }
     html.push("</td>");
     html.push("</tr>");
@@ -198,12 +227,15 @@ function loadSummary(response)
     html.push("Change Percent");
     html.push("</td>");
     html.push("<td>");
-    html.push(parseFloat(change_percent.toFixed(2))+"%");
-    if (change_percent >0) {
-        html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
-    }
-    if (change_percent <0) {
-        html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+    html.push("&nbsp;");
+    if(response.last != null) {
+        html.push(parseFloat(change_percent.toFixed(2))+"%");
+        if (change_percent >0) {
+            html.push("<img src=\"https://csci571.com/hw/hw6/images/GreenArrowUp.jpg\"></img>")
+        }
+        if (change_percent <0) {
+            html.push("<img src=\"https://csci571.com/hw/hw6/images/RedArrowDown.jpg\"></img>")
+        }
     }
     html.push("</td>");
     html.push("</tr>");
@@ -214,10 +246,10 @@ function loadSummary(response)
     html.push("Number of Shares Traded");
     html.push("</td>");
     html.push("<td>");
-    html.push(response.volume);
+    html.push("&nbsp;");
+    if(response.volume != null) html.push(response.volume);
     html.push("</td>");
     html.push("</tr>");
-
     html.push("</table>");
     document.getElementById("summaryTable").innerHTML = html.join("");
 }
@@ -236,7 +268,7 @@ function loadNews(response) {
                         </div>
                         <div class="news-text">
                             <p id ="news-content"><b>`+ title +`</b> <br> 
-                            `+date+` <br><a href="`+origLink+`">See Original Post</a></p>
+                            `+date+` <br><a href="`+origLink+`" target="_blank">See Original Post</a></p>
                         </div>
                     </div>`
         html.push(s);
@@ -298,21 +330,28 @@ function loadChart(response)
 
         subtitle: {
             useHTML: true,
-            text: '<a href="https://api.tiingo.com/"><u>Source: Tiingo</u></a>',
+            text: '<a href="https://api.tiingo.com/" target="_blank">Source: Tiingo</a>',
         },
 
         yAxis: [
             {
                 title: {
-                    text: 'Volume'
-                },
-                opposite:true,
-            },
-            {
-                title: {
                     text: 'Stock Price'
                 },
                 opposite:false,
+                labels: {
+                    align: 'right'
+                }
+                
+            },
+            {
+                title: {
+                    text: 'Volume'
+                },
+                opposite:true,
+                labels: {
+                    align: 'left'
+                }
             }
         ],
 
@@ -320,7 +359,6 @@ function loadChart(response)
             name: 'Stock Price',
             data: price_series,
             type: 'area',
-            yAxis: 1,
             threshold: null,
             tooltip: {
                 valueDecimals: 2
@@ -339,9 +377,11 @@ function loadChart(response)
             }
         }, {
             name: 'Volume',
+            pointWidth: 3,
             data: volume_series,
             type: 'column',
-            yAxis: 0,
+            color: "#3D3D3D",
+            yAxis: 1,
             threshold: null,
             tooltip: {
                 valueDecimals: 0

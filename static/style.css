@@ -69,6 +69,10 @@ input[type=text] {
     font-size: 15px;
 }
 
+#submit:hover {
+    background-color: #cccccc;
+}
+
 #reset {
     position: absolute;
     margin-left: 210px;
@@ -80,6 +84,11 @@ input[type=text] {
     border-radius: 6px;
     font-size: 15px;
 }
+
+#reset:hover {
+    background-color: #cccccc;
+}
+
 
 #font-color {
     color: red;
@@ -166,7 +175,7 @@ table tr td:nth-child(2) img {
 /*high chart*/
 #chart-graph {
     width: 1000px;
-    height: 400px;
+    height: 500px;
     margin-top: 40px;
     margin-left: 250px;
 }
